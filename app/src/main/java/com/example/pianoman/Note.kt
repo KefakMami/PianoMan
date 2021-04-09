@@ -20,22 +20,10 @@ class Note (val speed: Float, val piano: Piano, val view: PianoView, val pitch: 
     val random = Random()
     var noteOnScreen = true
 
-    var rect: RectF
+    var rect: RectF = RectF()
 
     init {
         randomColor.color = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256))
-
-        x1 = when(pitch) {
-            in 1..5 -> (pitch * piano.whiteKeyWidth - epaisseur) / 2
-            in 6..12 -> ((pitch + 1) * piano.whiteKeyWidth - epaisseur) / 2
-            in 13..17 -> ((pitch + 2) * piano.whiteKeyWidth - epaisseur) / 2
-            in 18..24 -> ((pitch + 3) * piano.whiteKeyWidth - epaisseur) / 2
-            25 -> ((pitch + 4) * piano.whiteKeyWidth - epaisseur) / 2
-            else -> (piano.whiteKeyWidth - epaisseur) / 2
-        }
-
-        x2 = x1 + epaisseur
-        rect = RectF(x1, y, x2, (y - longueur * duree))
     }
 
     fun draw(canvas: Canvas) {
@@ -66,5 +54,19 @@ class Note (val speed: Float, val piano: Piano, val view: PianoView, val pitch: 
             }
             else (view.score.resetMultiplier())
         }
+    }
+
+    fun setNote() {
+        x1 = when(pitch) {
+            in 1..5 -> (pitch * piano.whiteKeyWidth - epaisseur) / 2
+            in 6..12 -> ((pitch + 1) * piano.whiteKeyWidth - epaisseur) / 2
+            in 13..17 -> ((pitch + 2) * piano.whiteKeyWidth - epaisseur) / 2
+            in 18..24 -> ((pitch + 3) * piano.whiteKeyWidth - epaisseur) / 2
+            25 -> ((pitch + 4) * piano.whiteKeyWidth - epaisseur) / 2
+            else -> (piano.whiteKeyWidth - epaisseur) / 2
+        }
+
+        x2 = x1 + epaisseur
+        rect = RectF(x1, y, x2, (y - longueur * duree))
     }
 }

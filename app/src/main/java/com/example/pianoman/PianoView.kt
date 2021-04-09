@@ -1,6 +1,8 @@
 package com.example.pianoman
 
 import android.content.Context
+import android.content.Intent.getIntent
+import android.content.Intent.parseIntent
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -23,10 +25,11 @@ import java.nio.file.Files
 class PianoView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0):
         SurfaceView(context, attributes,defStyleAttr), SurfaceHolder.Callback, Runnable {
 
+
     lateinit var canvas: Canvas
     lateinit var thread: Thread
-    var screenWidth: Float = 2500f
-    var screenHeight: Float = 1500f
+    var screenWidth: Float = 0f
+    var screenHeight: Float = 0f
     private val backgroundPaint = Paint()
     val piano: Piano = Piano(this)
     var drawing = false
@@ -42,10 +45,8 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
     init {
         backgroundPaint.color = Color.WHITE
 
-
-
         val loadInt = R.array.Scale
-        val loadArray: Array<String> = getResources().getStringArray(loadInt)
+        val loadArray: Array<String> = resources.getStringArray(loadInt)
         val speed: Float = loadArray[0].toFloat()
         var pitch: Int
         var duration: Int
@@ -61,6 +62,7 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
         val audioAttributes = AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_MEDIA)
                 .build()
 
         soundPool = SoundPool.Builder()
@@ -134,7 +136,17 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
 
         screenHeight = h.toFloat()
         screenWidth = w.toFloat()
+
+        piano.width = w.toFloat()
+        piano.height = h.toFloat()
+        piano.pianoTop = 3*h/4f
+
+        piano.whiteKeyWidth = piano.width/piano.nTouchesBlanches
+
         piano.setPiano()
+        for(note in notes) {
+            note.setNote()
+        }
     }
 
     fun draw() {

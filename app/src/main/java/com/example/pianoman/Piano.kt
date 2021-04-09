@@ -13,12 +13,12 @@ class Piano (val view: PianoView){
 
     var width: Float = view.screenWidth.toFloat()
     var height: Float = view.screenHeight.toFloat()
-    private val nTouchesBlanches = 15
+    val nTouchesBlanches = 15
     private val nTouchesNoires = 10
-    val whiteKeyWidth = width / nTouchesBlanches
-    val blackKeyWidth = 2 * whiteKeyWidth / 3
-    val pianoTop: Float = 1100f
-    private val blackKeyHeight = 1*(height - pianoTop)/2
+    var whiteKeyWidth = 0f
+    var blackKeyWidth = 0f
+    var pianoTop: Float = 0f
+    private var blackKeyHeight = 0f
 
     var whiteKeys: ArrayList<PianoKey> = arrayListOf()
     var blackKeys: ArrayList<PianoKey> = arrayListOf()
@@ -119,6 +119,11 @@ class Piano (val view: PianoView){
     }
 
     fun setPiano() {
+
+        whiteKeyWidth = width / nTouchesBlanches
+        blackKeyWidth = 2 * whiteKeyWidth / 3
+        blackKeyHeight = 5*(height - pianoTop)/8
+
         var pitchCount: Int = 1
         for (i in 0..nTouchesBlanches) {
             val r = RectF(i * whiteKeyWidth, pianoTop, (i+1) * whiteKeyWidth, height)
