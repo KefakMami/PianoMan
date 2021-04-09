@@ -47,7 +47,7 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
         val speed: Float = loadArray[0].toFloat()
         var pitch: Int
         var duration: Int
-        var position: Int = 1
+        var position = 1
         for(i in 1 until loadArray.size) {
             pitch = loadArray[i].split(";")[0].toInt()
             duration = loadArray[i].split(";")[1].toInt()
