@@ -3,9 +3,11 @@ package com.example.pianoman
 import android.content.Context
 import android.content.Intent.getIntent
 import android.content.Intent.parseIntent
+import android.content.res.AssetManager
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Typeface
 import android.media.AudioAttributes
 import android.media.SoundPool
 import android.os.Build
@@ -34,8 +36,12 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
     val piano: Piano = Piano(this)
     var drawing = false
     var score: Score = Score()
+
     val textColor = Paint()
     val redTextColor = Paint()
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    val font = resources.getFont(R.font.arcadeclassic)
 
     val soundPool: SoundPool
     val soundMap: SparseIntArray
@@ -45,7 +51,7 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
     init {
         backgroundPaint.color = Color.WHITE
 
-        val loadInt = R.array.Scale
+        val loadInt = R.array.Megalovania
         val loadArray: Array<String> = resources.getStringArray(loadInt)
         val speed: Float = loadArray[0].toFloat()
         var pitch: Int
@@ -98,9 +104,11 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
         soundMap.put(24, soundPool.load(context, R.raw.c6, 1))
 
         textColor.color = Color.BLACK
-        textColor.textSize = 70f
+        textColor.textSize = 90f
         redTextColor.color = Color.RED
-        redTextColor.textSize = 100f
+        redTextColor.textSize = 90f
+        textColor.typeface = font
+        redTextColor.typeface = font
     }
 
     fun pause() {
@@ -156,7 +164,7 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
             for(note in notes) note.draw(canvas)
             piano.draw(canvas)
             canvas.drawText("Score : " + score.score, 30f, 100f, textColor)
-            canvas.drawText("Combo : x" + score.multiplier, 30f, 250f, redTextColor)
+            canvas.drawText("Combo : x" + score.multiplier, 30f, 200f, redTextColor)
             holder.unlockCanvasAndPost(canvas)
         }
     }
