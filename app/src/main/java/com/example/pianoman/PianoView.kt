@@ -1,13 +1,9 @@
 package com.example.pianoman
 
 import android.content.Context
-import android.content.Intent.getIntent
-import android.content.Intent.parseIntent
-import android.content.res.AssetManager
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Typeface
 import android.media.AudioAttributes
 import android.media.SoundPool
 import android.os.Build
@@ -17,36 +13,31 @@ import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.annotation.RequiresApi
-import androidx.core.content.res.TypedArrayUtils.getString
-import androidx.core.content.res.TypedArrayUtils.getTextArray
-import java.io.File
-import java.io.FileReader
-import java.nio.file.Files
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class PianoView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0):
         SurfaceView(context, attributes,defStyleAttr), SurfaceHolder.Callback, Runnable {
 
 
-    lateinit var canvas: Canvas
-    lateinit var thread: Thread
+    private lateinit var canvas: Canvas
+    private lateinit var thread: Thread
     var screenWidth: Float = 0f
     var screenHeight: Float = 0f
     private val backgroundPaint = Paint()
-    val piano: Piano = Piano(this)
-    var drawing = false
+    private val piano: Piano = Piano(this)
+    private var drawing = false
     var score: Score = Score()
 
-    val textColor = Paint()
-    val redTextColor = Paint()
+    private val textColor = Paint()
+    private val redTextColor = Paint()
 
     @RequiresApi(Build.VERSION_CODES.O)
     val font = resources.getFont(R.font.arcadeclassic)
 
-    val soundPool: SoundPool
-    val soundMap: SparseIntArray
+    private val soundPool: SoundPool
+    private val soundMap: SparseIntArray
 
-    val notes = arrayListOf<Note>()
+    private val notes = arrayListOf<Note>()
 
     init {
         backgroundPaint.color = Color.WHITE
@@ -157,7 +148,7 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
         }
     }
 
-    fun draw() {
+    private fun draw() {
         if(holder.surface.isValid) {
             canvas = holder.lockCanvas()
             canvas.drawRect(0f, 0f, canvas.width.toFloat(), canvas.height.toFloat(), backgroundPaint)
@@ -169,7 +160,7 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
         }
     }
 
-    fun updatePositions(elapsedTimeMS: Double) {
+    private fun updatePositions(elapsedTimeMS: Double) {
         val interval = elapsedTimeMS / 1000.0
         for(note in notes) note.update(interval)
     }

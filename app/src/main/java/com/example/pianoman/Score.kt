@@ -3,15 +3,15 @@ package com.example.pianoman
 class Score {
     var score: Int = 0
     var multiplier: Int = 1
-    var consecutiveNotes: Int = 0
+    private var consecutiveNotes: Int = 0
 
     fun increaseScore(n: Int) {
         score += n*multiplier
     }
 
-    fun decreaseScore(n: Int) {
-        score -= n
-    }
+//    fun decreaseScore(n: Int) {
+//        score -= n
+//    }
 
     fun increaseMultiplier() {
         consecutiveNotes += 1

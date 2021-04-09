@@ -3,25 +3,21 @@ package com.example.pianoman
 import android.graphics.*
 import android.os.Build
 import android.view.MotionEvent
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import com.example.pianoman.PianoKey
-import com.example.pianoman.PianoView
-import com.example.pianoman.MainActivity
 
-class Piano (val view: PianoView){
+class Piano (private val view: PianoView){
 
-    var width: Float = view.screenWidth.toFloat()
-    var height: Float = view.screenHeight.toFloat()
+    var width: Float = view.screenWidth
+    var height: Float = view.screenHeight
     val nTouchesBlanches = 15
-    private val nTouchesNoires = 10
+    //private val nTouchesNoires = 10
     var whiteKeyWidth = 0f
-    var blackKeyWidth = 0f
+    private var blackKeyWidth = 0f
     var pianoTop: Float = 0f
     private var blackKeyHeight = 0f
 
-    var whiteKeys: ArrayList<PianoKey> = arrayListOf()
-    var blackKeys: ArrayList<PianoKey> = arrayListOf()
+    private var whiteKeys: ArrayList<PianoKey> = arrayListOf()
+    private var blackKeys: ArrayList<PianoKey> = arrayListOf()
 
     private val black = Paint()
     private val white = Paint()
@@ -40,8 +36,8 @@ class Piano (val view: PianoView){
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun pressKey(event: MotionEvent): Int{
-        var blackKeyPressed: Boolean = false
-        var pitch: Int = 0
+        var blackKeyPressed = false
+        var pitch = 0
         for(key in blackKeys) {
             if(key.rect.contains(event.x, event.y)) {
                 key.isPressed = true
@@ -64,27 +60,27 @@ class Piano (val view: PianoView){
         return pitch
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    fun glissandoKey(event: MotionEvent) {
-        var blackKeyPressed: Boolean = false
-        for(key in blackKeys) {
-            if(key.rect.contains(event.x, event.y) && !key.isPressed) {
-                key.isPressed = true
-                blackKeyPressed = true
-                view.playSound(key.pitch - 1)
-            }
-        }
-        for(key in whiteKeys) {
-            if (key.rect.contains(event.x, event.y) && !blackKeyPressed && !key.isPressed) {
-                key.isPressed = true
-                view.playSound(key.pitch - 1)
-            }
-        }
-    }
+//    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+//    fun glissandoKey(event: MotionEvent) {
+//        var blackKeyPressed: Boolean = false
+//        for(key in blackKeys) {
+//            if(key.rect.contains(event.x, event.y) && !key.isPressed) {
+//                key.isPressed = true
+//                blackKeyPressed = true
+//                view.playSound(key.pitch - 1)
+//            }
+//        }
+//        for(key in whiteKeys) {
+//            if (key.rect.contains(event.x, event.y) && !blackKeyPressed && !key.isPressed) {
+//                key.isPressed = true
+//                view.playSound(key.pitch - 1)
+//            }
+//        }
+//    }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun releaseKey(event: MotionEvent) {
-        var blackKeyReleased: Boolean = false
+        var blackKeyReleased = false
         for(key in blackKeys) {
             if(key.rect.contains(event.x, event.y) && key.isPressed) {
                 key.isPressed = false
@@ -124,7 +120,7 @@ class Piano (val view: PianoView){
         blackKeyWidth = 2 * whiteKeyWidth / 3
         blackKeyHeight = 5*(height - pianoTop)/8
 
-        var pitchCount: Int = 1
+        var pitchCount = 1
         for (i in 0..nTouchesBlanches) {
             val r = RectF(i * whiteKeyWidth, pianoTop, (i+1) * whiteKeyWidth, height)
             whiteKeys.add(PianoKey(r, pitchCount))

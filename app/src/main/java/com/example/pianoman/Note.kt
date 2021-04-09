@@ -3,24 +3,21 @@ package com.example.pianoman
 import android.graphics.*
 import java.util.*
 import android.graphics.RectF
-import android.view.MotionEvent
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.graphics.contains
-import kotlin.random.Random.Default.nextInt
 
-class Note (val speed: Float, val piano: Piano, val view: PianoView, val pitch: Int, position: Int, val duree: Int){
 
-    val epaisseur: Float = 50f
-    var x1: Float = 0f
-    var x2: Float = 0f
-    val longueur = 150f
-    var y: Float = - (longueur + 10f) * position
+class Note (private val speed: Float, private val piano: Piano, private val view: PianoView, private val pitch: Int, position: Int, private val duree: Int){
 
-    val randomColor = Paint()
-    val random = Random()
-    var noteOnScreen = true
+    private val epaisseur: Float = 50f
+    private var x1: Float = 0f
+    private var x2: Float = 0f
+    private val longueur = 150f
+    private var y: Float = - (longueur + 10f) * position
 
-    var rect: RectF = RectF()
+    private val randomColor = Paint()
+    private val random = Random()
+    private var noteOnScreen = true
+
+    private var rect: RectF = RectF()
 
     init {
         randomColor.color = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256))
@@ -41,19 +38,17 @@ class Note (val speed: Float, val piano: Piano, val view: PianoView, val pitch: 
         }
     }
 
-    fun deleteNote() {
+    private fun deleteNote() {
         noteOnScreen = false
     }
 
     fun detectPlay(playedPitch: Int) {
-        if(rect.top >= piano.pianoTop - 50f && rect.bottom <= piano.pianoTop + 50f && noteOnScreen) {
-            if (playedPitch == pitch) {
-                view.score.increaseScore((longueur*duree).toInt() - kotlin.math.abs(piano.pianoTop - rect.top).toInt())
-                deleteNote()
-                view.score.increaseMultiplier()
-            }
-            else (view.score.resetMultiplier())
+        if(rect.top >= piano.pianoTop - 50f && rect.bottom <= piano.pianoTop + 50f && noteOnScreen) if (playedPitch == pitch) {
+            view.score.increaseScore((longueur*duree).toInt() - kotlin.math.abs(piano.pianoTop - rect.top).toInt())
+            deleteNote()
+            view.score.increaseMultiplier()
         }
+        else (view.score.resetMultiplier())
     }
 
     fun setNote() {
