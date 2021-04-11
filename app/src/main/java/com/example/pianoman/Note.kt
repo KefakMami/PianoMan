@@ -34,6 +34,7 @@ class Note (private val speed: Float, private val piano: Piano, private val view
         }
         if (rect.top - longueur * duree > piano.pianoTop && noteOnScreen) {
             view.score.resetMultiplier()
+            view.score.countCorrect(false)
             deleteNote()
         }
     }
@@ -47,8 +48,12 @@ class Note (private val speed: Float, private val piano: Piano, private val view
             view.score.increaseScore((longueur*duree).toInt() - kotlin.math.abs(piano.pianoTop - rect.top).toInt())
             deleteNote()
             view.score.increaseMultiplier()
+            view.score.countCorrect(true)
         }
-        else (view.score.resetMultiplier())
+        else {
+            (view.score.resetMultiplier())
+            view.score.countCorrect(false)
+        }
     }
 
     fun setNote() {

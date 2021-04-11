@@ -1,15 +1,12 @@
 package com.example.pianoman
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.reflect.Array
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class MainActivity: AppCompatActivity() {
@@ -19,8 +16,9 @@ class MainActivity: AppCompatActivity() {
     private val images: ArrayList<Int> = ArrayList()
     private val authors: ArrayList<String> = ArrayList()
     private val difficulty: ArrayList<Int> = ArrayList()
-    var select: Int = 0
+    private var select: Int = 0
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -33,6 +31,7 @@ class MainActivity: AppCompatActivity() {
         startActivity(intent)
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun onLeft(view: View) {
         if(select > 0) {
             select -= 1
@@ -44,6 +43,7 @@ class MainActivity: AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun onRight(view: View) {
         if(select < levels.size - 1) {
             select += 1
@@ -51,9 +51,7 @@ class MainActivity: AppCompatActivity() {
             if(select == levels.size - 1) {
                 arrowRight.setImageResource(R.drawable.arrow_hasnonext_r)
             }
-            else {
-                arrowLeft.setImageResource(R.drawable.arrow_hasnext_l)
-            }
+            else arrowLeft.setImageResource(R.drawable.arrow_hasnext_l)
         }
     }
 
@@ -70,7 +68,7 @@ class MainActivity: AppCompatActivity() {
         levels.add(R.array.Scale)
         titles.add("Scale")
         images.add(R.drawable.piano)
-        authors.add("Nous 3")
+        authors.add("Piano Man")
         difficulty.add(1)
 
         levels.add(R.array.AuClairDeLaLune)
@@ -93,7 +91,7 @@ class MainActivity: AppCompatActivity() {
 
         levelTitle.text = titles[0]
         centerImage.setImageResource(images[0])
-        levelDifficulty.text = "Facile"
+        levelDifficulty.text = getText(R.string.easy)
         levelDifficulty.setTextColor(getColor(R.color.green))
     }
 
@@ -105,15 +103,15 @@ class MainActivity: AppCompatActivity() {
 
         when(difficulty[selector]) {
             1 -> {
-                levelDifficulty.text = "Facile"
+                levelDifficulty.text = getText(R.string.easy)
                 levelDifficulty.setTextColor(getColor(R.color.green))
             }
             2 -> {
-                levelDifficulty.text = "Moyen"
+                levelDifficulty.text = getText(R.string.medium)
                 levelDifficulty.setTextColor(getColor(R.color.orange))
             }
             3 -> {
-                levelDifficulty.text = "Difficile"
+                levelDifficulty.text = getText(R.string.hard)
                 levelDifficulty.setTextColor(getColor(R.color.red))
             }
         }
