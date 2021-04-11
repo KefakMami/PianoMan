@@ -88,7 +88,7 @@ class MainActivity: AppCompatActivity() {
         levels.add(R.array.fantaisie_impromptu)
         titles.add("Fantaisie Impromptu")
         images.add(R.drawable.chopin)
-        authors.add("Frédéric Chopin")
+        authors.add("Frederic Chopin")
         difficulty.add(3)
 
         levelTitle.text = titles[0]
