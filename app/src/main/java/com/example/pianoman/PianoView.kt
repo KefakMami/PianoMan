@@ -42,20 +42,6 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
     init {
         backgroundPaint.color = Color.WHITE
 
-        val loadInt = R.array.Megalovania
-        val loadArray: Array<String> = resources.getStringArray(loadInt)
-        val speed: Float = loadArray[0].toFloat()
-        var pitch: Int
-        var duration: Int
-        var position = 1
-        for(i in 1 until loadArray.size) {
-            pitch = loadArray[i].split(";")[0].toInt()
-            duration = loadArray[i].split(";")[1].toInt()
-            notes.add(Note(speed, piano, this, pitch, position, duration))
-            position += duration
-
-        }
-
         val audioAttributes = AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -189,5 +175,21 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     fun stopSound() {
         soundPool.autoPause()
+    }
+
+    fun loadNotes(id: Int) {
+        val loadArray: Array<String> = resources.getStringArray(id)
+        val speed: Float = loadArray[0].toFloat()
+        var pitch: Int
+        var duration: Int
+        var position = 1
+        for(i in 1 until loadArray.size) {
+            pitch = loadArray[i].split(";")[0].toInt()
+            duration = loadArray[i].split(";")[1].toInt()
+            notes.add(Note(speed, piano, this, pitch, position, duration))
+            position += duration
+
+        }
+
     }
 }

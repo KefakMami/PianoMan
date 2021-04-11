@@ -32,7 +32,7 @@ class Note (private val speed: Float, private val piano: Piano, private val view
             rect.top += (interval * speed).toFloat()
             rect.bottom += (interval * speed).toFloat()
         }
-        if (rect.top - longueur * duree > piano.pianoTop) {
+        if (rect.top - longueur * duree > piano.pianoTop && noteOnScreen) {
             view.score.resetMultiplier()
             deleteNote()
         }

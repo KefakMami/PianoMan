@@ -15,7 +15,7 @@ class Score {
 
     fun increaseMultiplier() {
         consecutiveNotes += 1
-        if(consecutiveNotes == 5) {
+        if(consecutiveNotes == 7 && multiplier <= 8) {
             multiplier *= 2
             consecutiveNotes = 0
         }

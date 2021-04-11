@@ -9,7 +9,13 @@
         android:roundIcon="@mipmap/launcher_transparent_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PianoMan">
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".PianoActivity"
+            android:screenOrientation="landscape">
+
+        </activity>
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

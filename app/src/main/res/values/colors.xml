@@ -8,4 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="keyPressedColor">#FFBDC3C7</color>
+    <color name="green">#FF57D46A</color>
+    <color name="orange">#FFff8c00</color>
+    <color name="red">#FFff2121</color>
 </resources>
