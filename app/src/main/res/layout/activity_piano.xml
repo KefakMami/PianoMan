@@ -15,5 +15,25 @@
         app:layout_constraintTop_toTopOf="parent"
         android:text=""/>
 
+    <FrameLayout
+        android:id="@+id/gameEndFrame"
+        android:layout_width="594dp"
+        android:layout_height="290dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <fragment
+            android:id="@+id/gameEndFragment"
+            android:name="com.example.pianoman.GameEndFragment"
+            class="com.example.pianoman.GameEndFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible" />
+
+    </FrameLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

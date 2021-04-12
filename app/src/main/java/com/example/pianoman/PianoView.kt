@@ -1,18 +1,28 @@
 package com.example.pianoman
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.media.AudioAttributes
 import android.media.SoundPool
 import android.os.Build
+import android.os.Bundle
 import android.util.AttributeSet
 import android.util.SparseIntArray
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import android.view.View
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentTransaction
+import kotlinx.android.synthetic.main.activity_piano.view.*
+import androidx.fragment.app.FragmentManager
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class PianoView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0):
@@ -38,6 +48,10 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
     private val soundMap: SparseIntArray
 
     private val notes = arrayListOf<Note>()
+
+    var gameOver: Boolean = false
+
+    val activity = context as FragmentActivity
 
     init {
         backgroundPaint.color = Color.WHITE
@@ -149,6 +163,10 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
     private fun updatePositions(elapsedTimeMS: Double) {
         val interval = elapsedTimeMS / 1000.0
         for(note in notes) note.update(interval)
+        if(!notes.last().noteOnScreen) {
+            //showGameOverDialog(score.score, score.precision())
+            endGame()
+        }
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -188,8 +206,37 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
             duration = loadArray[i].split(";")[1].toInt()
             notes.add(Note(speed, piano, this, pitch, position, duration))
             position += duration
-
         }
-
     }
+
+    fun endGame() {
+        gameOver = true
+        //this.thread.interrupt()
+    }
+
+//    fun showGameOverDialog(score: Int, precision: Float) {
+//        class GameResult: DialogFragment() {
+//            override fun onCreateDialog(bundle: Bundle?): Dialog {
+//                val builder = AlertDialog.Builder(activity)
+//                builder.setTitle("Partie terminée")
+//                builder.setMessage("Score : $score \nPrécision : $precision")
+//                builder.setPositiveButton("Retour au menu principal", DialogInterface.OnClickListener { _, _->endGame()})
+//                return builder.create()
+//            }
+//        }
+//        activity.runOnUiThread(
+//                Runnable {
+//                    val ft = activity.supportFragmentManager.beginTransaction()
+//                    val prev =
+//                            activity.supportFragmentManager.findFragmentByTag("dialog")
+//                    if (prev != null) {
+//                        ft.remove(prev)
+//                    }
+//                    ft.addToBackStack(null)
+//                    val gameResult = GameResult()
+//                    gameResult.isCancelable = false
+//                    gameResult.show(ft,"dialog")
+//                }
+//        )
+//    }
 }
