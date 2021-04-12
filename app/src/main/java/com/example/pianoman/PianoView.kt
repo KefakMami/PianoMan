@@ -1,8 +1,10 @@
 package com.example.pianoman
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.DialogInterface
 import android.graphics.Canvas
 import android.graphics.Color
@@ -13,21 +15,17 @@ import android.os.Build
 import android.os.Bundle
 import android.util.AttributeSet
 import android.util.SparseIntArray
-import android.view.MotionEvent
-import android.view.SurfaceHolder
-import android.view.SurfaceView
-import android.view.View
+import android.view.*
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.*
 import kotlinx.android.synthetic.main.activity_piano.view.*
-import androidx.fragment.app.FragmentManager
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class PianoView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0):
         SurfaceView(context, attributes,defStyleAttr), SurfaceHolder.Callback, Runnable {
 
+    val pnact = this.context
 
     private lateinit var canvas: Canvas
     private lateinit var thread: Thread
@@ -164,8 +162,9 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
         val interval = elapsedTimeMS / 1000.0
         for(note in notes) note.update(interval)
         if(!notes.last().noteOnScreen) {
-            //showGameOverDialog(score.score, score.precision())
-            endGame()
+            drawing = false
+            showGameOverDialog(score.score, score.precision())
+            //endGame()
         }
     }
 
@@ -211,32 +210,55 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     fun endGame() {
         gameOver = true
-        //this.thread.interrupt()
+        thread = Thread(this)
+        thread.start()
+        context.getActivity()?.finish()
     }
 
-//    fun showGameOverDialog(score: Int, precision: Float) {
-//        class GameResult: DialogFragment() {
-//            override fun onCreateDialog(bundle: Bundle?): Dialog {
-//                val builder = AlertDialog.Builder(activity)
-//                builder.setTitle("Partie terminée")
-//                builder.setMessage("Score : $score \nPrécision : $precision")
-//                builder.setPositiveButton("Retour au menu principal", DialogInterface.OnClickListener { _, _->endGame()})
-//                return builder.create()
-//            }
-//        }
-//        activity.runOnUiThread(
-//                Runnable {
-//                    val ft = activity.supportFragmentManager.beginTransaction()
-//                    val prev =
-//                            activity.supportFragmentManager.findFragmentByTag("dialog")
-//                    if (prev != null) {
-//                        ft.remove(prev)
-//                    }
-//                    ft.addToBackStack(null)
-//                    val gameResult = GameResult()
-//                    gameResult.isCancelable = false
-//                    gameResult.show(ft,"dialog")
-//                }
-//        )
-//    }
+    // Crédit : Vlad <3
+    tailrec fun Context?.getActivity(): Activity? = this as? Activity ?: (this as? ContextWrapper)?.baseContext?.getActivity()
+
+    fun showGameOverDialog(score: Int, precision: Float) {
+
+        class GameResult: DialogFragment() {
+            override fun onCreateDialog(bundle: Bundle?): Dialog {
+                val builder = AlertDialog.Builder(activity)
+                builder.setTitle("Partie terminée")
+                builder.setMessage("Score : $score \nPrécision : $precision")
+                builder.setPositiveButton("Retour au menu principal", DialogInterface.OnClickListener { _, _->endGame()})
+                return builder.create()
+            }
+        }
+
+        class GameEndFragment : Fragment() {
+
+            override fun onCreate(savedInstanceState: Bundle?) {
+                super.onCreate(savedInstanceState)
+            }
+
+            override fun onCreateView(
+                    inflater: LayoutInflater, container: ViewGroup?,
+                    savedInstanceState: Bundle?): View? {
+                val view: View = inflater.inflate(R.layout.fragment_game_end, container, false)
+                val activity = activity as Context
+                return view
+            }
+
+        }
+
+        activity.runOnUiThread(
+                Runnable {
+                    val ft = activity.supportFragmentManager.beginTransaction()
+                    val prev =
+                            activity.supportFragmentManager.findFragmentByTag("dialog")
+                    if (prev != null) {
+                        ft.remove(prev)
+                    }
+                    ft.addToBackStack(null)
+                    val gameResult = GameResult()
+                    gameResult.isCancelable = false
+                    gameResult.show(ft,"dialog")
+                }
+        )
+    }
 }

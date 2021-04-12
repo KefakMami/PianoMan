@@ -26,9 +26,6 @@ class PianoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_piano)
         pianoView = findViewById(R.id.vMain)
         pianoView.loadNotes(level)
-        while (pianoView.gameOver) {
-            gameEnd()
-        }
     }
 
     override fun onPause() {
