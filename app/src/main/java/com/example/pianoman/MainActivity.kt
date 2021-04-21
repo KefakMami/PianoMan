@@ -21,6 +21,8 @@ class MainActivity: AppCompatActivity() {
     private val highScore: ArrayList<Int> = ArrayList()
     lateinit var sharedPreference: SharedPreference
     private var speed: Int = 1
+    private val fragment: InfoFragment = InfoFragment()
+    private val fragmentManager = this.supportFragmentManager
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -167,4 +169,11 @@ class MainActivity: AppCompatActivity() {
         }
     }
 
+    fun onInfo(view: View) {
+        fragmentManager.beginTransaction().replace(R.id.infoLayout, fragment).commit()
+    }
+
+    fun onClose(view: View) {
+        fragmentManager.beginTransaction().remove(fragment).commit()
+    }
 }

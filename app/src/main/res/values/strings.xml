@@ -3,10 +3,14 @@
     <string name="easy">Facile</string>
     <string name="medium">Moyen</string>
     <string name="hard">Difficile</string>
-    <string name="HS_0">HS_0</string>
-    <string name="HS_1">HS_1</string>
-    <string name="HS_2">HS_2</string>
-    <string name="HS_3">HS_3</string>
+    <string name="F">F</string>
+    <string name="E">E</string>
+    <string name="D">D</string>
+    <string name="C">C</string>
+    <string name="B">B</string>
+    <string name="A">A</string>
+    <string name="S">S</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -1,35 +1,28 @@
 package com.example.pianoman
 
 import android.app.Activity
-import android.app.AlertDialog
-import android.app.Dialog
-import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.DialogInterface
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.media.AudioAttributes
+import android.media.MediaPlayer
 import android.media.SoundPool
 import android.os.Build
 import android.os.Bundle
 import android.util.AttributeSet
 import android.util.SparseIntArray
-import android.view.*
+import android.view.MotionEvent
+import android.view.SurfaceHolder
+import android.view.SurfaceView
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import android.media.MediaPlayer
-import android.os.PowerManager
 
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class PianoView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0):
         SurfaceView(context, attributes,defStyleAttr), SurfaceHolder.Callback, Runnable {
-
-    val pnact = this.context
 
     var sharedPreference: SharedPreference = SharedPreference(context)
     private lateinit var canvas: Canvas
@@ -40,7 +33,6 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
     private val piano: Piano = Piano(this)
     private var drawing = false
     var score: Score = Score()
-    var highScore: Int = 0
     var levelId: Int = 0
     var started = false
     var acc = false
@@ -55,10 +47,7 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
     val soundMap: SparseIntArray
     var mediaPlayer: MediaPlayer? = null
 
-
     private val notes = arrayListOf<Note>()
-
-    var gameOver: Boolean = false
 
     val activity = context as FragmentActivity
 
@@ -102,8 +91,6 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
         soundMap.put(22, soundPool.load(context, R.raw.ad5, 1))
         soundMap.put(23, soundPool.load(context, R.raw.b5, 1))
         soundMap.put(24, soundPool.load(context, R.raw.c6, 1))
-
-        //soundPool.setOnLoadCompleteListener()
 
         textColor.color = Color.BLACK
         textColor.textSize = 90f
