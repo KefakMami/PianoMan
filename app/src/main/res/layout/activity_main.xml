@@ -12,9 +12,23 @@
         android:alpha="0.45"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/background" />
+
+    <TextView
+        android:id="@+id/SpeedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/arcadeclassic"
+        android:text="Vitesse"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/centerImage"
+        app:layout_constraintTop_toBottomOf="@+id/centerImage" />
 
     <ImageView
         android:id="@+id/centerImage"
@@ -41,7 +55,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.411"
-        app:srcCompat="@drawable/arrow_hasnext_l" />
+        app:srcCompat="@drawable/arrow_hasnonext_l" />
 
     <ImageView
         android:id="@+id/arrowRight"
@@ -56,6 +70,28 @@
         app:layout_constraintVertical_bias="0.411"
         app:srcCompat="@drawable/arrow_hasnext_r" />
 
+    <ImageView
+        android:id="@+id/speedArrowRight"
+        android:layout_width="16dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginRight="1dp"
+        android:onClick="onSpeedRight"
+        app:layout_constraintEnd_toEndOf="@+id/centerImage"
+        app:layout_constraintTop_toBottomOf="@+id/levelDifficulty"
+        app:srcCompat="@drawable/arrow_hasnext_r" />
+
+    <ImageView
+        android:id="@+id/speedArrowLeft"
+        android:layout_width="16dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="4dp"
+        android:onClick="onSpeedLeft"
+        app:layout_constraintEnd_toStartOf="@+id/speedText"
+        app:layout_constraintTop_toBottomOf="@+id/levelDifficulty"
+        app:srcCompat="@drawable/arrow_hasnonext_l" />
+
     <TextView
         android:id="@+id/levelTitle"
         android:layout_width="wrap_content"
@@ -67,6 +103,18 @@
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/centerImage"
         app:layout_constraintTop_toBottomOf="@+id/centerImage" />
+
+    <TextView
+        android:id="@+id/speedText"
+        android:layout_width="10dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="3dp"
+        android:fontFamily="@font/arcadeclassic"
+        android:text="1"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/speedArrowRight"
+        app:layout_constraintTop_toBottomOf="@+id/levelDifficulty" />
 
     <TextView
         android:id="@+id/levelHS"
@@ -111,8 +159,10 @@
         android:layout_marginBottom="16dp"
         android:onClick="onPlay"
         android:text="Jouer"
-        app:backgroundTint="#3E7CAC"
+        app:backgroundTint="#9511A7"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.499"
         app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

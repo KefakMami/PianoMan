@@ -3,6 +3,7 @@ package com.example.pianoman
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
+import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.DialogInterface
@@ -16,10 +17,13 @@ import android.os.Bundle
 import android.util.AttributeSet
 import android.util.SparseIntArray
 import android.view.*
-import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.*
-import kotlinx.android.synthetic.main.activity_piano.view.*
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import android.media.MediaPlayer
+import android.os.PowerManager
+
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class PianoView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0):
@@ -27,6 +31,7 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     val pnact = this.context
 
+    var sharedPreference: SharedPreference = SharedPreference(context)
     private lateinit var canvas: Canvas
     private lateinit var thread: Thread
     var screenWidth: Float = 0f
@@ -35,6 +40,10 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
     private val piano: Piano = Piano(this)
     private var drawing = false
     var score: Score = Score()
+    var highScore: Int = 0
+    var levelId: Int = 0
+    var started = false
+    var acc = false
 
     private val textColor = Paint()
     private val redTextColor = Paint()
@@ -42,8 +51,10 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
     @RequiresApi(Build.VERSION_CODES.O)
     val font = resources.getFont(R.font.arcadeclassic)
 
-    private val soundPool: SoundPool
-    private val soundMap: SparseIntArray
+    val soundPool: SoundPool
+    val soundMap: SparseIntArray
+    var mediaPlayer: MediaPlayer? = null
+
 
     private val notes = arrayListOf<Note>()
 
@@ -61,7 +72,7 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
                 .build()
 
         soundPool = SoundPool.Builder()
-                .setMaxStreams(25)
+                .setMaxStreams(26)
                 .setAudioAttributes(audioAttributes)
                 .build()
 
@@ -92,6 +103,8 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
         soundMap.put(23, soundPool.load(context, R.raw.b5, 1))
         soundMap.put(24, soundPool.load(context, R.raw.c6, 1))
 
+        //soundPool.setOnLoadCompleteListener()
+
         textColor.color = Color.BLACK
         textColor.textSize = 90f
         redTextColor.color = Color.RED
@@ -101,11 +114,13 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
     fun pause() {
+        pauseMusic()
         drawing = false
         thread.join()
     }
 
     fun resume() {
+        if (started) playMusic()
         drawing = true
         thread = Thread(this)
         thread.start()
@@ -161,10 +176,10 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
     private fun updatePositions(elapsedTimeMS: Double) {
         val interval = elapsedTimeMS / 1000.0
         for(note in notes) note.update(interval)
-        if(!notes.last().noteOnScreen) {
+        if(!notes.last().noteOnScreen && !acc) {
             drawing = false
-            showGameOverDialog(score.score, score.precision())
-            //endGame()
+            stopMusic()
+            showGameEndFragment()
         }
     }
 
@@ -187,78 +202,96 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
     fun playSound(pitch: Int) {
-        soundPool.play(soundMap.get(pitch), 1f, 1f, 1, 0, 1f)
+        soundPool.play(soundMap[pitch], 1f, 1f, 1, 0, 1f)
     }
 
     fun stopSound() {
         soundPool.autoPause()
     }
 
-    fun loadNotes(id: Int) {
+    fun loadNotes(id: Int, spCoeff: Int) {
         val loadArray: Array<String> = resources.getStringArray(id)
         val speed: Float = loadArray[0].toFloat()
+        val coeff: Float = when(spCoeff) {
+            1 -> 0.5f
+            2 -> 0.75f
+            3 -> 1f
+            else -> 1f
+        }
         var pitch: Int
         var duration: Int
         var position = 1
         for(i in 1 until loadArray.size) {
             pitch = loadArray[i].split(";")[0].toInt()
             duration = loadArray[i].split(";")[1].toInt()
-            notes.add(Note(speed, piano, this, pitch, position, duration))
+            if(i == 1) {
+                notes.add(FirstNote(speed * coeff, piano, this, pitch, position, duration))
+            }
+            else notes.add(Note(speed * coeff, piano, this, pitch, position, duration))
             position += duration
         }
+        levelId = id
+        loadMusic(id)
     }
 
-    fun endGame() {
-        gameOver = true
-        thread = Thread(this)
-        thread.start()
-        context.getActivity()?.finish()
+    // Crédit : Vlad
+    private tailrec fun Context?.getActivity(): Activity? = this as? Activity ?: (this as? ContextWrapper)?.baseContext?.getActivity()
+
+//    fun showGameOverDialog(score: Int, precision: Float) {
+//        class GameEndFragment : Fragment() {
+//            override fun onCreate(savedInstanceState: Bundle?) {
+//                super.onCreate(savedInstanceState)
+//            }
+//            override fun onCreateView(
+//                    inflater: LayoutInflater, container: ViewGroup?,
+//                    savedInstanceState: Bundle?): View? {
+//                val view: View = inflater.inflate(R.layout.fragment_game_end, container, false)
+//                val activity = activity as Context
+//                return view
+//            }
+//        }
+//    }
+
+    private fun showGameEndFragment() {
+        var b: Bundle = Bundle()
+        b.putInt("score", score.score)
+        b.putFloat("precision", score.precision())
+        val fragment: GameEndFragment = GameEndFragment()
+        fragment.arguments = b
+        val fragmentManager = activity.supportFragmentManager
+        fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit()
     }
 
-    // Crédit : Vlad <3
-    tailrec fun Context?.getActivity(): Activity? = this as? Activity ?: (this as? ContextWrapper)?.baseContext?.getActivity()
-
-    fun showGameOverDialog(score: Int, precision: Float) {
-
-        class GameResult: DialogFragment() {
-            override fun onCreateDialog(bundle: Bundle?): Dialog {
-                val builder = AlertDialog.Builder(activity)
-                builder.setTitle("Partie terminée")
-                builder.setMessage("Score : $score \nPrécision : $precision")
-                builder.setPositiveButton("Retour au menu principal", DialogInterface.OnClickListener { _, _->endGame()})
-                return builder.create()
-            }
-        }
-
-        class GameEndFragment : Fragment() {
-
-            override fun onCreate(savedInstanceState: Bundle?) {
-                super.onCreate(savedInstanceState)
-            }
-
-            override fun onCreateView(
-                    inflater: LayoutInflater, container: ViewGroup?,
-                    savedInstanceState: Bundle?): View? {
-                val view: View = inflater.inflate(R.layout.fragment_game_end, container, false)
-                val activity = activity as Context
-                return view
-            }
-
-        }
-
-        activity.runOnUiThread(
-                Runnable {
-                    val ft = activity.supportFragmentManager.beginTransaction()
-                    val prev =
-                            activity.supportFragmentManager.findFragmentByTag("dialog")
-                    if (prev != null) {
-                        ft.remove(prev)
-                    }
-                    ft.addToBackStack(null)
-                    val gameResult = GameResult()
-                    gameResult.isCancelable = false
-                    gameResult.show(ft,"dialog")
+    fun loadMusic(id: Int) {
+        if (mediaPlayer == null) {
+            acc = true
+            mediaPlayer = when(id) {
+                R.array.fantaisie_impromptu -> MediaPlayer.create(this.activity, R.raw.fantaisie_lh)
+                else -> {
+                    acc = false
+                    return
                 }
-        )
+            }
+            mediaPlayer!!.isLooping = false
+        }
+        mediaPlayer?.setOnCompletionListener {
+            if(acc) showGameEndFragment()
+        }
+    }
+
+    fun playMusic() {
+        if (mediaPlayer != null) mediaPlayer!!.start()
+    }
+
+    fun pauseMusic() {
+        if (mediaPlayer != null && mediaPlayer!!.isPlaying) mediaPlayer!!.pause()
+    }
+
+    fun stopMusic() {
+        if (mediaPlayer != null) {
+            mediaPlayer!!.stop()
+            mediaPlayer!!.release()
+            mediaPlayer = null
+        }
     }
 }

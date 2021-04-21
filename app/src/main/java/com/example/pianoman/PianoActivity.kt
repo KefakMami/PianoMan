@@ -1,31 +1,33 @@
 package com.example.pianoman
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import androidx.annotation.RequiresApi
+import android.content.Context
 import android.os.Build
-import android.content.Intent
-import android.content.Intent.getIntent
-import android.os.Handler
-import android.os.Looper
+import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.fragment.app.FragmentTransaction
-import kotlinx.android.synthetic.main.activity_piano.*
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class PianoActivity : AppCompatActivity() {
     lateinit var pianoView: PianoView
+    private var level: Int = 0
+    private var speed: Int = 0
+    private var highScore: Int = 0
+    var isPaused = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val sharedPreference: SharedPreference = SharedPreference(this)
 
-        val level: Int = intent.getIntExtra("com.example.pianoman.level", R.array.Scale)
+        level = intent.getIntExtra("com.example.pianoman.level", R.array.Scale)
+        speed = intent.getIntExtra("com.example.pianoman.speed", 1)
+        highScore = sharedPreference.getValueInt(level.toString())
 
         setContentView(R.layout.activity_piano)
         pianoView = findViewById(R.id.vMain)
-        pianoView.loadNotes(level)
+        pianoView.loadNotes(level, speed)
     }
 
     override fun onPause() {
@@ -38,17 +40,34 @@ class PianoActivity : AppCompatActivity() {
         pianoView.resume()
     }
 
-    fun gameEnd() {
-        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-        val gameEndFragment = GameEndFragment()
-        ft.show(gameEndFragment)
-    }
 
     override fun onBackPressed() {
-        Toast.makeText(this, "bruh", Toast.LENGTH_SHORT).show()
-        if (pianoView.gameOver) {
-            gameEndFrame.visibility = View.VISIBLE
+        isPaused = when(isPaused) {
+            true -> {
+                pianoView.resume()
+                Toast.makeText(this, "Resuming...", Toast.LENGTH_SHORT).show()
+                false
+            }
+            false -> {
+                pianoView.pause()
+                Toast.makeText(this, "Pausing...", Toast.LENGTH_SHORT).show()
+                true
+            }
         }
-        //super.onBackPressed()
     }
+
+
+    fun onFinish(view: View) {
+        if(pianoView.score.score > highScore) {
+            pianoView.sharedPreference.save(level.toString(), pianoView.score.score)
+        }
+        this.finish()
+    }
+
+    fun onReset(view: View) {
+        val intent = intent
+        finish()
+        startActivity(intent)
+    }
+
 }
