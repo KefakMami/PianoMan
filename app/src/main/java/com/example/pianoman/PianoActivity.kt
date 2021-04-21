@@ -69,5 +69,4 @@ class PianoActivity : AppCompatActivity() {
         finish()
         startActivity(intent)
     }
-
 }
