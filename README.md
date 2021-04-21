@@ -1,3 +1,5 @@
+![Git](https://github.com/KefakMami/PianoMan/blob/master/git.png)
+
 # PianoMan
 Projet Info 2021 BA2 (EPB - ULB)
 
