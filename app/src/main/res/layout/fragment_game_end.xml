@@ -5,10 +5,10 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#91D8F8"
+    android:background="#F2E7FFFD"
+    android:tag="game_end"
     android:visibility="visible"
-    tools:context=".GameEndFragment"
-    android:tag="game_end">
+    tools:context=".GameEndFragment">
 
     <TextView
         android:id="@+id/GradeLetter"
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/arcadeclassic"
-        android:text="Grade :"
+        android:text="Grade"
         android:textColor="#0C5EB6"
         android:textSize="50sp"
         app:layout_constraintStart_toStartOf="@+id/TitleText"
@@ -77,7 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="92dp"
         android:fontFamily="@font/arcadeclassic"
-        android:text="Precision : "
+        android:text="Precision"
         android:textColor="#000000"
         android:textSize="36sp"
         app:layout_constraintStart_toStartOf="@+id/TitleText"
@@ -89,7 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="56dp"
         android:fontFamily="@font/arcadeclassic"
-        android:text="Score : "
+        android:text="Score"
         android:textColor="#000000"
         android:textSize="36sp"
         app:layout_constraintStart_toStartOf="@+id/TitleText"
@@ -109,8 +109,8 @@
 
     <TextView
         android:id="@+id/precisionFloat"
-        android:layout_width="113dp"
-        android:layout_height="32dp"
+        android:layout_width="140dp"
+        android:layout_height="40dp"
         android:layout_marginTop="92dp"
         android:fontFamily="@font/arcadeclassic"
         android:gravity="right"

@@ -16,6 +16,8 @@ class PianoActivity : AppCompatActivity() {
     private var speed: Int = 0
     private var highScore: Int = 0
     var isPaused = false
+    private val returnFragment: ReturnFragment = ReturnFragment()
+    private val fragmentManager = this.supportFragmentManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,12 +47,14 @@ class PianoActivity : AppCompatActivity() {
         isPaused = when(isPaused) {
             true -> {
                 pianoView.resume()
-                Toast.makeText(this, "Resuming...", Toast.LENGTH_SHORT).show()
+                fragmentManager.beginTransaction().remove(returnFragment).commit()
+                //Toast.makeText(this, "Resuming...", Toast.LENGTH_SHORT).show()
                 false
             }
             false -> {
                 pianoView.pause()
-                Toast.makeText(this, "Pausing...", Toast.LENGTH_SHORT).show()
+                fragmentManager.beginTransaction().replace(R.id.returnFrame, returnFragment).commit()
+                //Toast.makeText(this, "Pausing...", Toast.LENGTH_SHORT).show()
                 true
             }
         }
@@ -68,5 +72,28 @@ class PianoActivity : AppCompatActivity() {
         val intent = intent
         finish()
         startActivity(intent)
+    }
+
+    fun onContinue(view: View) {
+        fragmentManager.beginTransaction().remove(returnFragment).commit()
+        pianoView.resume()
+        isPaused = false
+    }
+
+    fun onPauseBtn(view: View) {
+        isPaused = when(isPaused) {
+            true -> {
+                pianoView.resume()
+                fragmentManager.beginTransaction().remove(returnFragment).commit()
+                //Toast.makeText(this, "Resuming...", Toast.LENGTH_SHORT).show()
+                false
+            }
+            false -> {
+                pianoView.pause()
+                fragmentManager.beginTransaction().replace(R.id.returnFrame, returnFragment).commit()
+                //Toast.makeText(this, "Pausing...", Toast.LENGTH_SHORT).show()
+                true
+            }
+        }
     }
 }
