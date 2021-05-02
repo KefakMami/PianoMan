@@ -6,12 +6,12 @@ import android.graphics.RectF
 import android.media.SoundPool
 
 
-open class Note (val speed: Float, val piano: Piano, val view: PianoView, private val pitch: Int, position: Int, val duree: Int){
+open class Note (val speed: Float, val piano: Piano, val view: PianoView, private val pitch: Int, position: Int, private val duree: Int){
 
     private val epaisseur: Float = 50f
     private var x1: Float = 0f
     private var x2: Float = 0f
-    val longueur = 150f
+    private val longueur = 150f
     private var y: Float = - (longueur + 10f) * position
 
     private val randomColor = Paint()

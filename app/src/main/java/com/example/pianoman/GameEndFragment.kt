@@ -61,7 +61,7 @@ class GameEndFragment() : Fragment() {
                 gradeLetterText.setTextColor(resources.getColor(R.color.purple_500))
             }
         }
-        val activity = activity
+        //val activity = activity
         //setScoreText()
         return view
     }

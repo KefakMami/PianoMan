@@ -200,9 +200,9 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
         val loadArray: Array<String> = resources.getStringArray(id)
         val speed: Float = loadArray[0].toFloat()
         val coeff: Float = when(spCoeff) {
-            1 -> 0.5f
-            2 -> 0.75f
-            3 -> 1f
+            1 -> 0.75f
+            2 -> 1f
+            3 -> 1.25f
             else -> 1f
         }
         var pitch: Int
@@ -223,21 +223,6 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     // Crédit : Vlad
     private tailrec fun Context?.getActivity(): Activity? = this as? Activity ?: (this as? ContextWrapper)?.baseContext?.getActivity()
-
-//    fun showGameOverDialog(score: Int, precision: Float) {
-//        class GameEndFragment : Fragment() {
-//            override fun onCreate(savedInstanceState: Bundle?) {
-//                super.onCreate(savedInstanceState)
-//            }
-//            override fun onCreateView(
-//                    inflater: LayoutInflater, container: ViewGroup?,
-//                    savedInstanceState: Bundle?): View? {
-//                val view: View = inflater.inflate(R.layout.fragment_game_end, container, false)
-//                val activity = activity as Context
-//                return view
-//            }
-//        }
-//    }
 
     private fun showGameEndFragment() {
         var b: Bundle = Bundle()

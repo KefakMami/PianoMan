@@ -6,7 +6,6 @@ class Score {
     private var consecutiveNotes: Int = 0
 
     var correctNotes: Int = 0
-    var incorrectNotes: Int = 0
     var totalNotes: Int = 0
 
     fun increaseScore(n: Int) {
