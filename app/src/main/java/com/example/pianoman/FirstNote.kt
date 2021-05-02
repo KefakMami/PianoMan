@@ -7,7 +7,7 @@ import android.view.View
 import androidx.annotation.RequiresApi
 
 
-class FirstNote(speed: Float, piano: Piano, view: PianoView, pitch: Int, position: Int, duree: Int): Note(speed, piano, view, pitch, position, duree) {
+class FirstNote(speed: Float, piano: Piano, view: PianoView, pitch: Int, position: Float, duree: Float): Note(speed, piano, view, pitch, position, duree) {
     //var mediaPlayer: MediaPlayer? = null
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)

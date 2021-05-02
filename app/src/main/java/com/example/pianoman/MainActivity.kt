@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -33,18 +34,17 @@ class MainActivity: AppCompatActivity() {
         if (select == 0) {
             arrowLeft.setImageResource(R.drawable.arrow_hasnonext_l)
         }
-
-        sharedPreference.save(R.array.Scale.toString(), 0)
-        sharedPreference.save(R.array.AuClairDeLaLune.toString(), 0)
-        sharedPreference.save(R.array.Megalovania.toString(), 0)
-        sharedPreference.save(R.array.fantaisie_impromptu.toString(), 0)
+        if(sharedPreference.getValueInt(R.array.Scale.toString()) == null) sharedPreference.save(R.array.Scale.toString(), 0)
+        if(sharedPreference.getValueInt(R.array.AuClairDeLaLune.toString()) == null) sharedPreference.save(R.array.AuClairDeLaLune.toString(), 0)
+        if(sharedPreference.getValueInt(R.array.Megalovania.toString()) == null) sharedPreference.save(R.array.Megalovania.toString(), 0)
+        if(sharedPreference.getValueInt(R.array.fantaisie_impromptu.toString()) == null) sharedPreference.save(R.array.fantaisie_impromptu.toString(), 0)
     }
 
     fun onPlay(view: View) {
         val intent = Intent(this@MainActivity, PianoActivity::class.java)
         intent.putExtra("com.example.pianoman.level", levels[select])
         intent.putExtra("com.example.pianoman.speed", speed)
-        startActivity(intent)
+        startActivityForResult(intent, 1)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -131,6 +131,13 @@ class MainActivity: AppCompatActivity() {
         difficulty.add(3)
         highScore.add(sharedPreference.getValueInt(levels[3].toString()))
 
+        levels.add(R.array.ce_reve_bleu)
+        titles.add("Ce rêve Bleu")
+        images.add(R.drawable.ce_reve_bleu)
+        authors.add("Disney")
+        difficulty.add(2)
+        highScore.add(sharedPreference.getValueInt(levels[4].toString()))
+
         levelTitle.text = titles[0]
         centerImage.setImageResource(images[0])
         levelDifficulty.text = getText(R.string.easy)
@@ -175,5 +182,14 @@ class MainActivity: AppCompatActivity() {
 
     fun onClose(view: View) {
         fragmentManager.beginTransaction().remove(fragment).commit()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == 1) {
+            updateHighScore(select)
+            Toast.makeText(this, "New High Score!", Toast.LENGTH_SHORT).show()
+            levelHS.text = sharedPreference.getValueInt(levels[select].toString()).toString()
+        }
     }
 }

@@ -6,7 +6,7 @@ import android.graphics.RectF
 import android.media.SoundPool
 
 
-open class Note (val speed: Float, val piano: Piano, val view: PianoView, private val pitch: Int, position: Int, private val duree: Int){
+open class Note (val speed: Float, val piano: Piano, val view: PianoView, private val pitch: Int, position: Float, private val duree: Float){
 
     private val epaisseur: Float = 50f
     private var x1: Float = 0f

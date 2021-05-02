@@ -206,11 +206,11 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
             else -> 1f
         }
         var pitch: Int
-        var duration: Int
-        var position = 1
+        var duration: Float
+        var position = 1f
         for(i in 1 until loadArray.size) {
             pitch = loadArray[i].split(";")[0].toInt()
-            duration = loadArray[i].split(";")[1].toInt()
+            duration = loadArray[i].split(";")[1].toFloat()
             if(i == 1) {
                 notes.add(FirstNote(speed * coeff, piano, this, pitch, position, duration))
             }

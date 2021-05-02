@@ -1,10 +1,9 @@
 package com.example.pianoman
 
-import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 
@@ -62,9 +61,14 @@ class PianoActivity : AppCompatActivity() {
 
 
     fun onFinish(view: View) {
+        val returnIntent: Intent = Intent()
+
         if(pianoView.score.score > highScore) {
             pianoView.sharedPreference.save(level.toString(), pianoView.score.score)
+            setResult(1, returnIntent)
         }
+        else setResult(0, returnIntent)
+
         this.finish()
     }
 
