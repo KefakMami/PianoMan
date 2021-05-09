@@ -61,6 +61,8 @@ class PianoActivity : AppCompatActivity() {
 
 
     fun onFinish(view: View) {
+        pianoView.stopMusic()
+
         val returnIntent: Intent = Intent()
 
         if(pianoView.score.score > highScore) {

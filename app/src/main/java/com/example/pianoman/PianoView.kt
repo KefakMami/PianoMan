@@ -107,7 +107,9 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
     }
 
     fun resume() {
-        if (started) playMusic()
+        if (started) {
+            playMusic()
+        }
         drawing = true
         thread = Thread(this)
         thread.start()
@@ -196,6 +198,7 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
         soundPool.autoPause()
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun loadNotes(id: Int, spCoeff: Int) {
         val loadArray: Array<String> = resources.getStringArray(id)
         val speed: Float = loadArray[0].toFloat()
@@ -218,11 +221,8 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
             position += duration
         }
         levelId = id
-        loadMusic(id)
+        loadMusic(id, coeff)
     }
-
-    // Crédit : Vlad
-    private tailrec fun Context?.getActivity(): Activity? = this as? Activity ?: (this as? ContextWrapper)?.baseContext?.getActivity()
 
     private fun showGameEndFragment() {
         var b: Bundle = Bundle()
@@ -234,17 +234,21 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
         fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit()
     }
 
-    fun loadMusic(id: Int) {
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun loadMusic(id: Int, speedcoeff: Float) {
         if (mediaPlayer == null) {
             acc = true
             mediaPlayer = when(id) {
                 R.array.fantaisie_impromptu -> MediaPlayer.create(this.activity, R.raw.fantaisie_lh)
+                R.array.ce_reve_bleu -> MediaPlayer.create(this.activity, R.raw.aladdin_lh)
                 else -> {
                     acc = false
                     return
                 }
+
             }
             mediaPlayer!!.isLooping = false
+            mediaPlayer!!.playbackParams.speed = speedcoeff
         }
         mediaPlayer?.setOnCompletionListener {
             if(acc) showGameEndFragment()
@@ -253,6 +257,7 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
 
     fun playMusic() {
         if (mediaPlayer != null) mediaPlayer!!.start()
+        started = true
     }
 
     fun pauseMusic() {
@@ -265,5 +270,6 @@ class PianoView @JvmOverloads constructor (context: Context, attributes: Attribu
             mediaPlayer!!.release()
             mediaPlayer = null
         }
+        started = false
     }
 }

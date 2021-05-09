@@ -700,8 +700,8 @@
     </string-array>
 
     <string-array name="ce_reve_bleu">
-        <item>400</item>
-        <item>1;32</item>
+        <item>385</item>
+        <item>1;16</item>
 
         <item>19;1</item>
         <item>17;0.5</item>
@@ -734,7 +734,7 @@
 
         <item>10;0.5</item>
         <item>15;1</item>
-        <item>17;2</item>
+        <item>17;1</item>
         <item>19;1</item>
         <item>17;0.5</item>
         <item>20;1</item>
@@ -767,7 +767,7 @@
         <item>7;0.5</item>
         <item>8;1</item>
         <item>12;1</item>
-        <item>10;3.5</item>
+        <item>10;4.5</item>
         <item>7;0.5</item>
         <item>8;1</item>
         <item>12;1</item>
@@ -794,7 +794,7 @@
         <item>7;0.5</item>
         <item>8;1</item>
         <item>12;1</item>
-        <item>10;3.5</item>
+        <item>10;4.5</item>
         <item>7;0.5</item>
         <item>8;1</item>
         <item>12;1</item>
@@ -803,9 +803,9 @@
         <item>8;1</item>
         <item>7;1</item>
         <item>7;2.5</item>
-        <item>7;1</item>
-        <item>8;1</item>
-        <item>10;1</item>
+        <item>7;0.666666666666666666</item>
+        <item>8;0.666666666666666666</item>
+        <item>10;0.666666666666666666</item>
         <item>14;1</item>
         <item>12;1</item>
         <item>10;1.5</item>

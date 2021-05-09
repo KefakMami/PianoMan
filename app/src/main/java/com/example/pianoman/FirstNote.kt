@@ -10,20 +10,21 @@ import androidx.annotation.RequiresApi
 class FirstNote(speed: Float, piano: Piano, view: PianoView, pitch: Int, position: Float, duree: Float): Note(speed, piano, view, pitch, position, duree) {
     //var mediaPlayer: MediaPlayer? = null
 
+    override var noteOnScreen = true
+
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun play() {
         view.playMusic()
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun update(interval: Double) {
         if (noteOnScreen) {
             rect.top += (interval * speed).toFloat()
             rect.bottom += (interval * speed).toFloat()
         }
-        if (rect.top > piano.pianoTop && noteOnScreen) {
+        if (rect.top > piano.pianoTop && !view.started) {
             play()
-            view.started = true
-            deleteNote()
         }
     }
 }

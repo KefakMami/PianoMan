@@ -16,7 +16,7 @@ open class Note (val speed: Float, val piano: Piano, val view: PianoView, privat
 
     private val randomColor = Paint()
     private val random = Random()
-    var noteOnScreen = true
+    open var noteOnScreen = true
 
     var rect: RectF = RectF()
 
