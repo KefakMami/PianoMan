@@ -1,5 +1,6 @@
 package com.example.pianoman
 
+import android.graphics.Canvas
 import android.media.SoundPool
 import android.media.MediaPlayer
 import android.os.Build
@@ -9,8 +10,6 @@ import androidx.annotation.RequiresApi
 
 class FirstNote(speed: Float, piano: Piano, view: PianoView, pitch: Int, position: Float, duree: Float): Note(speed, piano, view, pitch, position, duree) {
     //var mediaPlayer: MediaPlayer? = null
-
-    override var noteOnScreen = true
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun play() {
@@ -26,5 +25,9 @@ class FirstNote(speed: Float, piano: Piano, view: PianoView, pitch: Int, positio
         if (rect.top > piano.pianoTop && !view.started) {
             play()
         }
+    }
+
+    override fun draw(canvas: Canvas) {
+
     }
 }

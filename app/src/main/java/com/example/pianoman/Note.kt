@@ -24,7 +24,7 @@ open class Note (val speed: Float, val piano: Piano, val view: PianoView, privat
         randomColor.color = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256))
     }
 
-    fun draw(canvas: Canvas) {
+    open fun draw(canvas: Canvas) {
         if (rect.top > -10 && noteOnScreen) canvas.drawRoundRect(rect, 10f, 10f, randomColor)
     }
 
